@@ -2,8 +2,8 @@
 #include <stdlib.h>
 #include "LinkedList.h"
 #include "Controller.h"
+#include "inputs.h"
 #include "Passenger.h"
-#include "Funciones_Extras.h"
 #include "parser.h"
 
 int main()

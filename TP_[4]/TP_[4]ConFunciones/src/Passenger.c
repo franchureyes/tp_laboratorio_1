@@ -3,7 +3,8 @@
 #include <string.h>
 #include <ctype.h>
 #include "Passenger.h"
-#include "Funciones_Extras.h"
+
+#include "inputs.h"
 #include "LinkedList.h"
 
 Passenger* Passenger_new()

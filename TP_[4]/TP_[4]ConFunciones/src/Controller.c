@@ -74,7 +74,7 @@ int controller_loadFromBinary(char* path , LinkedList* pArrayListPassenger)
     return retorno;
 }
 
-/** \brief Realiza el alta del pasajero
+/** \brief Alta de pasajero
  *
  * \param path char*
  * \param pArrayListPassenger LinkedList*
@@ -88,15 +88,15 @@ int controller_addPassenger(LinkedList* pArrayListPassenger, int contadorBorrado
 	if(pArrayListPassenger != NULL)
 	{
 		Passenger* unPasajero;
-		char idStr[TAMDATOS];
-		char nombre[TAMNOMBRES];
-		char apellido[TAMNOMBRES];
-		char precioStr[TAMDATOS];
+		char idStr[TAM_RESTODATOS];
+		char nombre[TAM_NOMBRES];
+		char apellido[TAM_NOMBRES];
+		char precioStr[TAM_RESTODATOS];
 		int tipoPasajero;
-		char tipoPasajeroStr[TAMDATOS];
-		char codigoVuelo[TAMDATOS];
+		char tipoPasajeroStr[TAM_RESTODATOS];
+		char codigoVuelo[TAM_RESTODATOS];
 		int estadoVuelo;
-		char estadoVueloStr[TAMDATOS];
+		char estadoVueloStr[TAM_RESTODATOS];
 		int len;
 		int r;
 		int id;
@@ -132,15 +132,15 @@ int controller_addPassenger(LinkedList* pArrayListPassenger, int contadorBorrado
 				r = utn_getFloat(precioStr, "Ingrese el precio del vuelo: ", "Error. Ingrese un dato valido.\n");
 				if(r == 0)
 				{
-					r = utn_getInt(&tipoPasajero, "Ingrese el tipo de pasajero (1-First Class, 2-Executive Class, 3-Economy Class):\n",
-							"Error. Ingrese una opcion valida.\n", 1, 3);
+					r = utn_getInt(&tipoPasajero, "Ingrese 1 si es First Class, 2 si es Executive Class, 3 si es Economy Class: ",
+							"Error. Ingrese una opción valida.\n", 1, 3);
 					itoa(tipoPasajero, tipoPasajeroStr, TAM_DECIMAL);
 					pedirCodigoVuelo(codigoVuelo, "Ingrese el codigo de vuelo: ");
 
 					if(r == 0)
 					{
-						r = utn_getInt(&estadoVuelo, "Ingrese el estado de vuelo (1-Aterrizado, 2-En horario, 3-En vuelo, 4-Demorado):",
-								"Error. Ingrese una opcion valida.\n",1,4);
+						r = utn_getInt(&estadoVuelo, "Ingrese 1 si el vuelo esta Aterrizado, 2 si esta En horario, 3 si esta En vuelo, 4 si esta Demorado: ",
+								"Error. Ingrese una opción valida.\n",1,4);
 						switch(estadoVuelo)
 						{
 						case 1:
@@ -173,7 +173,7 @@ int controller_addPassenger(LinkedList* pArrayListPassenger, int contadorBorrado
     return retorno;
 }
 
-/** \brief Modifica los datos de los pasajeros
+/** \brief Modificar datos de pasajero
  *
  * \param path char*
  * \param pArrayListPassenger LinkedList*
@@ -186,32 +186,30 @@ int controller_editPassenger(LinkedList* pArrayListPassenger)
 
 	if(pArrayListPassenger != NULL)
 	{
-		int len;
 		int id;
 		int index;
 		int campoModificar;
-		char nombre[TAMNOMBRES];
-		char apellido[TAMNOMBRES];
-		char precio[TAMDATOS];
-		char codigo[TAMDATOS];
+		char nombre[TAM_NOMBRES];
+		char apellido[TAM_NOMBRES];
+		char precio[TAM_RESTODATOS];
+		char codigo[TAM_RESTODATOS];
 		int tipoPasajero;
 		int estadoVuelo;
-		char estadoVueloStr[TAMDATOS];
+		char estadoVueloStr[TAM_RESTODATOS];
 		Passenger* pasajeroAux;
-		len = ll_len(pArrayListPassenger);
-		if(len > 0)
+
+		if(!ll_isEmpty(pArrayListPassenger))
 		{
-			controller_ListPassenger(pArrayListPassenger);
 			if(utn_getInt(&id,"Ingrese el id del pasajero que desea modificar: ","Error. El id ingresado no es valido.\n", 1, 9999999) == 0)
 			{
-				index = findPassengerById(pArrayListPassenger, id);
+				index = Passenger_find(pArrayListPassenger, id);
 				if(index > -1)
 				{
 					pasajeroAux = ll_get(pArrayListPassenger, index);
 					if(pasajeroAux != NULL)
 					{
-						printf("\nEl pasajero que selecciono para modificar es:\n");
-						printPassenger(pasajeroAux);
+						printf("\nEl pasajero que seleccionó para modificar es:\n");
+						Passenger_printOne(pasajeroAux);
 						do{
 							utn_getInt(&campoModificar, "\nCampos que se pueden modificar:\n"
 									"  1- Nombre.\n"
@@ -220,8 +218,8 @@ int controller_editPassenger(LinkedList* pArrayListPassenger)
 									"  4- Tipo de pasajero.\n"
 									"  5- Codigo de vuelo.\n"
 									"  6- Estado de vuelo.\n"
-									"  7- Guardar cambios y volver al menï¿½ principal.\n"
-									"Cual desea modificar? ", "Error. Ingrese una opciï¿½n valida\n", 1, 7);
+									"  7- Guardar cambios y volver al menú principal.\n"
+									"Cual desea modificar? ", "Error. Ingrese una opción valida\n", 1, 7);
 							switch(campoModificar)
 							{
 							case 1:
@@ -280,7 +278,7 @@ int controller_editPassenger(LinkedList* pArrayListPassenger)
 								break;
 							case 4:
 								utn_getInt(&tipoPasajero, "Ingrese 1 si es First Class, 2 si es Executive Class, 3 si es Economy Class: ",
-										"Error. Ingrese una opciï¿½n valida.\n", 1, 3);
+										"Error. Ingrese una opción valida.\n", 1, 3);
 								if(Passenger_setTipoPasajero(pasajeroAux, tipoPasajero) == 0)
 								{
 									printf("\nEl tipo de pasajero fue modificado correctamente.\n");
@@ -305,7 +303,7 @@ int controller_editPassenger(LinkedList* pArrayListPassenger)
 								break;
 							case 6:
 								utn_getInt(&estadoVuelo, "Ingrese 1 si el vuelo esta Aterrizado, 2 si esta En horario, 3 si esta En vuelo, 4 si esta Demorado: ",
-																	"Error. Ingrese una opciï¿½n valida.\n",1,4);
+																	"Error. Ingrese una opción valida.\n",1,4);
 								switch(estadoVuelo)
 								{
 								case 1:
@@ -358,7 +356,7 @@ int controller_editPassenger(LinkedList* pArrayListPassenger)
     return retorno;
 }
 
-/** \brief Realiza la baja de pasajeros
+/** \brief Baja de pasajero
  *
  * \param path char*
  * \param pArrayListPassenger LinkedList*
@@ -371,44 +369,43 @@ int controller_removePassenger(LinkedList* pArrayListPassenger)
 
 	if(pArrayListPassenger != NULL)
 	{
-		int len;
 		int id;
 		int index;
-		char confirmacion[TAMDATOS];
+		char confirmacion[TAM_RESTODATOS];
 		int confirmacionSi;
 		int confirmacionNo;
 		Passenger* pasajeroAux;
-		len = ll_len(pArrayListPassenger);
-		if(len > 0)
+
+		if(!ll_isEmpty(pArrayListPassenger))
 		{
 			controller_ListPassenger(pArrayListPassenger);
 			if(utn_getInt(&id,"Ingrese el id del pasajero que desea dar de baja: ","Error. El id ingresado no es valido.\n", 0, 999999) == 0)
 			{
-				index = findPassengerById(pArrayListPassenger, id);
+				index = Passenger_find(pArrayListPassenger, id);
 				if(index > -1)
 				{
-					pasajeroAux = ll_get(pArrayListPassenger, index);
+					pasajeroAux = ll_pop(pArrayListPassenger, index);
 					if(pasajeroAux != NULL)
 					{
 						printf("El pasajero a dar de baja es:\n");
-						printPassenger(pasajeroAux);
+						Passenger_printOne(pasajeroAux);
 						do{
 							utn_getName(confirmacion, "Esta seguro que es quien quiere eliminar? (responda 'si' o 'no'): ", "Error. Ingrese una respuesta valida.\n");
 							confirmacionSi = strcmp(confirmacion, "Si");
 							confirmacionNo = strcmp(confirmacion, "No");
 							if(confirmacionSi == 0)
 							{
-								if(ll_remove(pArrayListPassenger, index) == 0)
-								{
-									Passenger_delete(pasajeroAux);
-									retorno = 0;
-								}
+								Passenger_delete(pasajeroAux);
+								retorno = 0;
 							}
 							else
 							{
 								if(confirmacionNo == 0)
 								{
-									retorno = -3;
+									if(ll_push(pArrayListPassenger, index, pasajeroAux) == 0)
+									{
+										retorno = -3;
+									}
 								}
 								else
 								{
@@ -429,7 +426,7 @@ int controller_removePassenger(LinkedList* pArrayListPassenger)
     return retorno;
 }
 
-/** \brief Lista los pasajeros
+/** \brief Listar pasajeros
  *
  * \param path char*
  * \param pArrayListPassenger LinkedList*
@@ -446,12 +443,12 @@ int controller_ListPassenger(LinkedList* pArrayListPassenger)
 
 		cantElementosPasajeros = ll_len(pArrayListPassenger);
 
-		if(cantElementosPasajeros > 0)
+		if(ll_isEmpty(pArrayListPassenger) == 0)
 		{
 			for(int i = 0; i < cantElementosPasajeros; i++)
 			{
 				unPasajero = (Passenger*) ll_get(pArrayListPassenger, i);
-				printPassenger(unPasajero);
+				Passenger_printOne(unPasajero);
 			}
 			retorno = 0;
 		}
@@ -460,7 +457,7 @@ int controller_ListPassenger(LinkedList* pArrayListPassenger)
     return retorno;
 }
 
-/** \brief Ordena pasajeros por distintos criterios
+/** \brief Ordenar pasajeros
  *
  * \param path char*
  * \param pArrayListPassenger LinkedList*
@@ -480,8 +477,8 @@ int controller_sortPassenger(LinkedList* pArrayListPassenger)
 				"  2- Ordenar por Apellido.\n"
 				"  3- Ordenar por tipo de pasajero.\n"
 				"  4- Ordenar por codigo de vuelo.\n"
-				"Como desea ordenar la lista de pasajeros? ", "Error. Ingrese una opcion valida.\n", 1, 4);
-		utn_getInt(&orden, "Ingrese 1 para orden ascendente o 0 para orden descendente: ", "Error. Ingrese una opciï¿½n valida.\n", 0, 1);
+				"Como desea ordenar la lista de pasajeros? ", "Error. Ingrese una opción valida.\n", 1, 4);
+		utn_getInt(&orden, "Ingrese 1 para orden ascendente o 0 para orden desencente: ", "Error. Ingrese una opción valida.\n", 0, 1);
 
 		switch(criterio)
 		{
@@ -534,14 +531,15 @@ int controller_saveAsText(char* path , LinkedList* pArrayListPassenger, int abie
 			Passenger* pasajeroAux;
 			int len;
 			int idAux;
-			char nombreAux[TAMNOMBRES];
-			char apellidoAux[TAMNOMBRES];
+			char nombreAux[TAM_NOMBRES];
+			char apellidoAux[TAM_NOMBRES];
 			float precioAux;
 			int tipoPasajeroAux;
-			char tipoPasajeroConvertido[TAMDATOS];
-			char codigoVueloAux[TAMDATOS];
-			char estadoVueloAux[TAMDATOS];
+			char tipoPasajeroConvertido[TAM_RESTODATOS];
+			char codigoVueloAux[TAM_RESTODATOS];
+			char estadoVueloAux[TAM_RESTODATOS];
 
+			len = ll_len(pArrayListPassenger);
 
 			if(abiertoPreviamente == 1)
 			{
@@ -552,7 +550,6 @@ int controller_saveAsText(char* path , LinkedList* pArrayListPassenger, int abie
 				pArchivo = fopen (path,"a");
 			}
 
-			len = ll_len(pArrayListPassenger);
 			if(len > 0)
 			{
 				if(pArchivo != NULL)
@@ -633,29 +630,14 @@ int controller_saveAsBinary(char* path , LinkedList* pArrayListPassenger, int ab
 			FILE* pArchivo;
 			Passenger* pasajeroAux;
 			int len;
-//			char* primeraLinea = "id,name,lastname,price,flycode,typePassenger,statusFlight\n";
-//			int lenPrimeraLinea;
 
-//			if(abiertoPreviamente == 1)
-//			{
-				pArchivo = fopen (path,"wb");
-//			}
-//			else
-//			{
-//				pArchivo = fopen (path,"ab");
-//			}
+			pArchivo = fopen (path,"wb");
 
 			len = ll_len(pArrayListPassenger);
 			if(len > 0)
 			{
 				if(pArchivo != NULL)
 				{
-//					if(abiertoPreviamente == 1)
-//					{
-//						lenPrimeraLinea = strlen(primeraLinea);
-//						fwrite(primeraLinea,sizeof(char),lenPrimeraLinea,pArchivo);
-//					}
-
 					for(int i = 0; i < len; i++)
 					{
 						pasajeroAux = ll_get(pArrayListPassenger, i);
@@ -674,7 +656,7 @@ int controller_saveAsBinary(char* path , LinkedList* pArrayListPassenger, int ab
 }
 
 /**
- * @brief Corrige los ids
+ * @brief
  *
  * @param path
  * @param pArrayListPassenger
@@ -694,7 +676,7 @@ int controller_controlarId(char* path, LinkedList* pArrayListPassenger, int cant
 			Passenger* pasajeroAux;
 			pArchivo = fopen (path,"r");
 			char buffer[1000];
-			char ultimoIdStr[TAMDATOS];
+			char ultimoIdStr[TAM_RESTODATOS];
 			int ultimoIdInt;
 			int contador = 0;
 
@@ -718,7 +700,7 @@ int controller_controlarId(char* path, LinkedList* pArrayListPassenger, int cant
 					pasajeroAux = ll_get(pArrayListPassenger, i);
 					Passenger_setId(pasajeroAux, 1 + i + ultimoIdInt);
 					ll_set(pArrayListPassenger, i, pasajeroAux);
-					printf("\nSe modificï¿½ el id de %s %s para agregarse en la lista. Ahora es %d\n",pasajeroAux->nombre,pasajeroAux->apellido,pasajeroAux->id);
+					printf("\nSe modificó el id de %s %s para agregarse en la lista. Ahora es %d\n",pasajeroAux->nombre,pasajeroAux->apellido,pasajeroAux->id);
 				}
 
 				*pUltimoId = ultimoIdInt;
@@ -732,10 +714,6 @@ int controller_controlarId(char* path, LinkedList* pArrayListPassenger, int cant
     return retorno;
 }
 
-/// @brief Controla los pasajeros que se repiten
-///
-/// @param pArrayListPassenger
-/// @param cantAgregados
 void controller_controlarRepetidos(LinkedList* pArrayListPassenger, int cantAgregados)
 {
 	int len;
@@ -747,3 +725,159 @@ void controller_controlarRepetidos(LinkedList* pArrayListPassenger, int cantAgre
 	}
 
 }
+
+int controller_borrarLista(LinkedList* pArrayListPassenger)
+{
+	int retorno = -1;
+
+	if(pArrayListPassenger != NULL)
+	{
+		if(ll_clear(pArrayListPassenger) == 0)
+		{
+			retorno = 0;
+		}
+	}
+
+	return retorno;
+}
+
+LinkedList* controller_crearSubLista(LinkedList* pArrayListPassenger, int ultimoId)
+{
+	LinkedList* subLista = NULL;
+	int minimo;
+	int minimoIndex;
+	int maximo;
+	int maximoIndex;
+
+	if(utn_getInt(&minimo, "Ingrese el id desde el cual desea subdividir la lista: ", "Error.Ingrese un valor valido\n", 0, ultimoId - 1) == 0)
+	{
+		minimoIndex = Passenger_find(pArrayListPassenger, minimo);
+		if(utn_getInt(&maximo,"Ingrese el id hasta el cual desea subdividir la lista: ", "Error.Ingrese un valor valido\n", minimoIndex, ultimoId) == 0)
+		{
+			maximoIndex = Passenger_find(pArrayListPassenger, maximo);
+
+			subLista = ll_subList(pArrayListPassenger, minimoIndex, maximoIndex);
+		}
+	}
+
+	return subLista;
+}
+
+LinkedList* controller_backup (LinkedList* pArrayListPassenger)
+{
+	LinkedList* backup = NULL;
+
+	if(pArrayListPassenger != NULL)
+	{
+		backup = ll_clone(pArrayListPassenger);
+	}
+
+	return backup;
+}
+
+LinkedList* controller_filtrarPasajeros(LinkedList* pArrayListPassenger, int* criterioFiltrado)
+{
+	LinkedList* listaFiltrada = NULL;
+	int criterio;
+
+	utn_getInt(&criterio, "\nOpciones de filtrado:\n"
+					"  1- FirstClass.\n"
+					"  2- ExecutiveClass.\n"
+					"  3- EconomyClass.\n"
+					"Como desea filtrar la lista de pasajeros? ", "Error. Ingrese una opción valida.\n", 1, 3);
+
+	switch(criterio)
+	{
+	case 1:
+		listaFiltrada = ll_filter(pArrayListPassenger, Passenger_filterByFirstClass);
+		break;
+	case 2:
+		listaFiltrada = ll_filter(pArrayListPassenger, Passenger_filterByExecutiveClass);
+		break;
+	case 3:
+		listaFiltrada = ll_filter(pArrayListPassenger, Passenger_filterByEconomyClass);
+		break;
+	}
+
+	*criterioFiltrado = criterio;
+
+	return listaFiltrada;
+}
+
+int controller_descuentoAumentoPrecio(LinkedList* pArrayListPassenger, LinkedList* pListFiltered, LinkedList* pSubList)
+{
+	int retorno = -1;
+	int eleccionLista;
+	int eleccionAumentoDescuento;
+
+	if(pArrayListPassenger != NULL)
+	{
+		if(pListFiltered != NULL)
+		{
+			if(pSubList != NULL)
+			{
+				utn_getInt(&eleccionLista, "\nOpciones de lista para modificar su precio:\n"
+									"  1- Lista Principal.\n"
+									"  2- Sub Lista Generada.\n"
+									"  3- Lista Filtrada.\n"
+									"En cual lista desea generar el cambio? ", "Error. Ingrese una opción valida.\n", 1, 3);
+
+				utn_getInt(&eleccionAumentoDescuento, "\nOpciones disponibles para modificar el precio:\n"
+						"  1- Realizar un aumentar del 10% al precio.\n"
+						"  2- Realizar un descuento del 10% al precio.\n"
+						"Que operacion desea realizar? ", "Error. Ingrese una opción valida.\n", 1, 2);
+
+				switch(eleccionLista)
+				{
+				case 1:
+					if(ll_len(pArrayListPassenger) > 0)
+					{
+						if(eleccionAumentoDescuento == 1)
+						{
+							ll_map(pArrayListPassenger, Passenger_applyPriceIncrease);
+						}
+						else
+						{
+							ll_map(pArrayListPassenger, Passenger_applyPriceDiscount);
+						}
+						retorno = 0;
+					}
+					break;
+				case 2:
+					if(ll_len(pSubList) > 0)
+					{
+						if(eleccionAumentoDescuento == 1)
+						{
+							ll_map(pSubList, Passenger_applyPriceIncrease);
+						}
+						else
+						{
+							ll_map(pSubList, Passenger_applyPriceDiscount);
+						}
+						retorno = 0;
+					}
+					break;
+				case 3:
+					if(ll_len(pListFiltered) > 0)
+					{
+						if(eleccionAumentoDescuento == 1)
+						{
+							ll_map(pListFiltered, Passenger_applyPriceIncrease);
+						}
+						else
+						{
+							ll_map(pListFiltered, Passenger_applyPriceDiscount);
+						}
+						retorno = 0;
+					}
+					break;
+
+			}
+		}
+	}
+	}
+
+	return retorno;
+}
+
+

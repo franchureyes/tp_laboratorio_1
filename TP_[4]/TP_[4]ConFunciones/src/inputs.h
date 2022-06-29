@@ -1,5 +1,5 @@
-#ifndef FUNCIONES_EXTRAS_H_
-#define FUNCIONES_EXTRAS_H_
+#ifndef INPUTS_H_
+#define INPUTS_H_
 
 /// @brief Le pide al usuario que ingrese el codigo del vuelo
 ///
