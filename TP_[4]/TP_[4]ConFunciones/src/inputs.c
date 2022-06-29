@@ -143,7 +143,7 @@ int utn_getName(char* cadena, char* mensaje, char* mensajeError)
 		gets(cadena);
 		for (int i = 0; i < strlen(cadena); i++)
 		{
-			if(isalpha(cadena[i]) == 0 && isspace(cadena[i]) == 0 && cadena[i] != 'ñ')
+			if(isalpha(cadena[i]) == 0 || isspace(cadena[i]))
 			{
 				retorno = -1;
 				printf(mensajeError);
